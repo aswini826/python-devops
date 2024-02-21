@@ -56,7 +56,7 @@ def get_idpost(id: int, response: Response):
     return {"data": find}
 
 
-@app.delete("/post/{id}", status_code = status.HTTP_204_NO_CONTENT)
+@app.delete("/post/{id}")
 def delete_post(id: int):
     index = find_index(id)
     new_data.pop(index)
