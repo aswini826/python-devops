@@ -3,13 +3,14 @@ from typing import Optional
 from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
+import psycopg2
+from psycopg2.extras import ReaDictCursor
 
 app = FastAPI()
 
 class Post(BaseModel):
     Movie: str
     Genre: str
-    Rating: Optional[float] = None 
     Published: bool = True
     
 
@@ -17,6 +18,13 @@ class Update(BaseModel):
     title: str
     content: str
 
+try:
+    conn = psycopg2.connect(host='localhost', database='fastapi', user='postgres', password='ashu', cursor_factory=ReaDictCursor)
+    cursor = conn.cursor()
+    print("Database connection was successfully")
+except Exception as error:
+    print("Connection of database failed")
+    print("Error :", error)
 
 new_data = [{"title": "Favorite Movie", "content": "Cruella", "id": 1}, {"title": "Favorite Food", "content": "Briyani", "id": 2}]
 
