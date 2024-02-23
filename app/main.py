@@ -64,11 +64,17 @@ def get_post(db: Session = Depends(get_db)):
     return {"data": database}
 
 @app.post("/create", status_code = status.HTTP_201_CREATED)
-def create_post(payload: Post):
-    cursor.execute("""INSERT INTO "post" (movie, genre, published) VALUES (%s, %s, %s) RETURNING * """,
-                    (payload.movie, payload.genre, payload.published))
-    create_database = cursor.fetchone()
-    conn.commit()
+def create_post(payload: Post, db: Session = Depends(get_db)):
+    # cursor.execute("""INSERT INTO "post" (movie, genre, published) VALUES (%s, %s, %s) RETURNING * """,
+    #                 (payload.movie, payload.genre, payload.published))
+    # create_database = cursor.fetchone()
+    # conn.commit()
+    create_database = models.Post(**payload.dict())
+
+    db.add(create_database)
+    db.commit()
+    db.refresh(create_database)
+
     return {"data": create_database}
 
 @app.get("/post/{id}")
