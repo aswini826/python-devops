@@ -21,10 +21,6 @@ class Post(BaseModel):
     published: bool = True
     
 
-class Update(BaseModel):
-    title: str
-    content: str
-
 while True:
 
     try:
@@ -52,16 +48,19 @@ def find_index(id):
         
 @app.get("/sqltest")
 def test_post(db: Session = Depends(get_db)):
-    return {"status": "successfull"}
+
+    test = db.query(models.Post).all()
+    return {"data": test}
 
 @app.get("/")
 async def root():
     return {"message": "Hello aswini"}
 
 @app.get("/post")
-def get_post():
-    cursor.execute("""SELECT * FROM post """)
-    database = cursor.fetchall()
+def get_post(db: Session = Depends(get_db)):
+    # cursor.execute("""SELECT * FROM posts """)
+    # database = cursor.fetchall()
+    database = db.query(models.Post).all()
     return {"data": database}
 
 @app.post("/create", status_code = status.HTTP_201_CREATED)
