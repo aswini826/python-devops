@@ -8,4 +8,4 @@ class Post(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     movie = Column(String, nullable=False)
     genre = Column(String, nullable=False)
-    published = Column(Boolean, default=True)
+    published = Column(Boolean, server_default='TRUE', nullable=False)
