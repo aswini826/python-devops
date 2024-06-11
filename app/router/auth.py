@@ -13,3 +13,5 @@ def login(user_credantials: schemas.UserLogin, Session = Depends(database.get_db
     
     if not utils.verify(user_credantials.password, user.password):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid Credentials")
+    
+    return {"token" : "example token"}
