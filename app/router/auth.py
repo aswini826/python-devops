@@ -5,7 +5,7 @@ from .. import database, schemas, models, utils
 router = APIRouter(tags=['Authentication'])
 
 @router.post('/login')
-def login(user_credantials: schemas.UserLogin, Session = Depends(database.get_db)):
+def login(user_credantials: schemas.UserLogin, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.email == user_credantials.email).first() # type: ignore
 
     if not user:
