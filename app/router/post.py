@@ -6,7 +6,7 @@ from fastapi.params import Body
 from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from .. import models,schemas,utils
+from .. import models,schemas,utils, oauth2
 from ..database import engine, get_db
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import mode
@@ -27,12 +27,14 @@ def get_post(db: Session = Depends(get_db)):
 
 
 @router.post("/create", status_code = status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def create_post(payload: schemas.CreatePost, db: Session = Depends(get_db)):
+def create_post(payload: schemas.CreatePost, db: Session = Depends(get_db), user_id: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""INSERT INTO "post" (movie, genre, published) VALUES (%s, %s, %s) RETURNING * """,
     #                 (payload.movie, payload.genre, payload.published))
     # create_database = cursor.fetchone()
     # conn.commit()
     create_database = models.Post(**payload.dict())
+
+    print(user_id)
 
     db.add(create_database)
     db.commit()
